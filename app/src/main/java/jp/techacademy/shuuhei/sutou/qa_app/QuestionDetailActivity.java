@@ -147,7 +147,6 @@ public class QuestionDetailActivity extends AppCompatActivity {
 
                     genreRef.push().setValue(data, this);
 
-
                 }
             });
         }
