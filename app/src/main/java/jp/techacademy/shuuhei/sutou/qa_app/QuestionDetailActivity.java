@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.util.Base64;
 import android.widget.ImageView;
+import android.support.design.widget.Snackbar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,6 +39,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
     private DatabaseReference mAnswerRef;
     int count = 0;
     private int mGenre;
+    private Button button;
 
     private ChildEventListener mEventListener = new ChildEventListener() {
         @Override
@@ -87,22 +89,18 @@ public class QuestionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_detail);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Button button = (Button)findViewById(R.id.likeButton);
+        button = (Button)findViewById(R.id.likeButton);
 
-        if (user == null) {
-            button.setVisibility(View.GONE);
 
-        }
  /*       else if((user != null) && ((count%2) == 0)) {
             button.setText("登録済み");
             count += 1;
 
         }else if((user != null) && ((count%2) != 0)){ */
- else{
-            String title = button.getText().toString();
-            Log.d("title", "" + title + "");
-            button.setVisibility(View.VISIBLE);
+
+
+
+
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -125,12 +123,15 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     // 本文を取得する
                     String body = mBodyText.getText().toString();
 
+   //                 String like = button.getText().toString();
+
                     // Preferenceから名前を取る
                     SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     String name = sp.getString(Const.NameKEY, "");
 
                     data.put("body", body);
                     data.put("name", name);
+           //         data.put("like", like);
 
                     // 添付画像を取得する
                     BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
@@ -145,11 +146,30 @@ public class QuestionDetailActivity extends AppCompatActivity {
                         data.put("image", bitmapString);
                     }
 
-                    genreRef.push().setValue(data, this);
+                    genreRef.push().setValue(data, new DatabaseReference.CompletionListener(){
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference){
+                            if (databaseError == null) {
+                                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                                if (user == null) {
+                                    button.setVisibility(View.GONE);
+
+                                }
+                                else {
+                                    button.setVisibility(View.VISIBLE);
+                                    button.setText("登録済み");
+                                    finish();
+                                }
+                            } else {
+                                Snackbar.make(findViewById(android.R.id.content), "投稿に失敗しました", Snackbar.LENGTH_LONG).show();
+                            }
+
+                        }
+                    });
 
                 }
             });
-        }
+
 
         Bundle extras = getIntent().getExtras();
         mQuestion = (Question) extras.get("question");

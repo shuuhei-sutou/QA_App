@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
                 } else if (id == R.id.nav_compter) {
                     mToolbar.setTitle("コンピューター");
                     mGenre = 4;
-                }else if (id == R.id.nav_compter) {
+                }else if (id == R.id.nav_like) {
                     mToolbar.setTitle("お気に入り");
                     mGenre = 5;
                 }
