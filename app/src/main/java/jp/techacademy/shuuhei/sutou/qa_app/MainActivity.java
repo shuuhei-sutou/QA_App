@@ -185,7 +185,12 @@ public class MainActivity extends AppCompatActivity {
                 if(mGenreRef != null){
                     mGenreRef.removeEventListener(mEventListener);
                 }
-                mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+                if(mGenre == 5){
+                    mGenreRef = mDatabaseReference.child(Const.FavoritesPATH).child(String.valueOf(mGenre));
+                }
+                else{
+                    mGenreRef = mDatabaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+                }
                 mGenreRef.addChildEventListener(mEventListener);
                 return true;
             }

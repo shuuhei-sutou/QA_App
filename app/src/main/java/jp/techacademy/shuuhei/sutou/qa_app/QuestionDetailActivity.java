@@ -113,7 +113,7 @@ public class QuestionDetailActivity extends AppCompatActivity {
                     mImageView.setOnClickListener(this);
 
                     DatabaseReference dataBaseReference = FirebaseDatabase.getInstance().getReference();
-                    DatabaseReference genreRef = dataBaseReference.child(Const.ContentsPATH).child(String.valueOf(mGenre));
+                    DatabaseReference genreRef = dataBaseReference.child(Const.FavoritesPATH).child(String.valueOf(mGenre));
 
                     Map<String, String> data = new HashMap<String, String>();
 
